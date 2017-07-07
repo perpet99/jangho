@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <userList>
+    <user>
+      <name>tt</name>
+      <dateList>
+        <string>dsfd</string>
+      </dateList>
+    </user>
+  </userList>
+</data>
