@@ -39,6 +39,7 @@ namespace WindowsFormsApp1
         {
             public string date;
             public string count;
+            public string room = "";
             public int callTick = 0;
         }
 
@@ -105,6 +106,7 @@ namespace WindowsFormsApp1
             return new object[] { };
         }
         private static readonly HttpClient client = new HttpClient();
+        int state = 0;
         private async void timer1_Tick(object sender, EventArgs e)
         {
             //var form = new Form2();
@@ -114,52 +116,111 @@ namespace WindowsFormsApp1
 
             try
             {
+
+
+            //webBrowser1.Document.InvokeScript("calendar_move('20020706')");
+                //webBrowser1.Document.InvokeScript("javascript:calendar_move('20200706')");
+              
+                
+                //    var r = webBrowser1.Document.GetElementsByTagName("HTML");
+
+                //var a = r[0].OuterHtml;
+
                 
 
-
-                var r = webBrowser1.Document.GetElementsByTagName("HTML");
-
-                var a = r[0].OuterHtml;
-
-
-                var sr = new System.IO.StreamReader(webBrowser1.DocumentStream);
+                //var sr = new System.IO.StreamReader(webBrowser1.DocumentStream);
 
                 //_dateList.Clear();
-
+                
+                //webBrowser1.Document.InvokeScript("calendar_move(\"20020706\")");
+                //doclist.Add(webBrowser1.DocumentText);
                 //while (sr.EndOfStream)
+
+                switch(state)
+                {
+                    case 0:
+                        state = 1;
+                        break;
+                    case 1:
+                        var list = webBrowser1.Document.GetElementsByTagName("a");
+                        foreach (var item in list)
+                        {
+                            var aa = item as HtmlElement;
+                            if (aa != null && aa.InnerText == "다음달")
+                                aa.InvokeMember("Click");
+                        }
+                        state = 2;
+                        return;
+                    case 2:
+                        state = 0;
+                        break;
+
+                }
+
                 foreach (var line in webBrowser1.DocumentText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
                 {
 
                     if (line.Contains("f_SelectDateZone") == false)
                         continue;
 
-                    var objList = line.Split(new string[] { "line = ", "href='javascript:f_SelectDateZone(", "\"", " ", ",", ");'" }, StringSplitOptions.RemoveEmptyEntries);
+                    var objList = line.Split(new string[] { "line = ","zero", "href='javascript:f_SelectDateZone(", "\"", " ", ",", ");'" }, StringSplitOptions.RemoveEmptyEntries);
                     //var objList = ExtractFormatParameters(line2, "f_SelectDateZone( {0}, {1}, {2} , {3} , {4} )");
 
-                    if (objList.Count() == 0)
+                    if (objList.Count() < 10)
                         continue;
-                    if (objList[4] == "0")
+
+                    if (objList[0] != "<LI")
                         continue;
-                    int aa = 0;
-                    if (int.TryParse(objList[0], out aa) == false)
-                        continue;
+
+
                     dateInfo d = new dateInfo();
-                    d.date = objList[0];
-                    d.count = objList[4];
-                    if (_dateList.Keys.Contains(d.date) == false)
+                    d.date = objList[5];
+                    d.room = objList[8];
+                    d.count = objList[9];
+                    
+                    // 모두가능 저장
+                    if (_dateList.Keys.Contains(d.date) == false )
                     {
                         _dateList[d.date] = d;
+                    }
+                    //특정룸 저장
+                    if (_dateList.Keys.Contains(d.date+d.room) == false)
+                    {
+                        _dateList[d.date + d.room] = d;
+                    }
+
+                    if( d.count == "0")
+                    {
+                        continue;
+                    }
+
+                    if (listBox1.Items.Count > 1000)
+                    {
+                        listBox1.Items.Clear();
                     }
 
                     if ((Environment.TickCount - _dateList[d.date].callTick) < 60 * 1000)
                         continue;
 
-                    if (_date2UserList.Keys.Contains(d.date) == false)
+                    string dd = string.Empty;
+
+                    if (_date2UserList.Keys.Equals(d.date) == true)
+                    {
+                        dd = d.date;
+                    }
+
+                    if (_date2UserList.Keys.Equals(d.date + d.room) == true)
+                    {
+                        dd = d.date + d.room;
+                    }
+
+                    if (dd == string.Empty)
                         continue;
 
-                    var du = _date2UserList[d.date];
+                    var du = _date2UserList[dd];
 
-                    Process.Start("IExplore.exe", "http://forest.maketicket.co.kr/ticket/GD41");
+                    if( checkBox1.Checked)
+                        Process.Start("IExplore.exe", "http://forest.maketicket.co.kr/ticket/GD41");
 
                     foreach (var item in du.userList)
                     {
@@ -190,11 +251,11 @@ namespace WindowsFormsApp1
                     listBox1.Items.Add(item);
                 }
 
-                if (_st.wMonth == 7)
-                    _st.wMonth = 8;
-                else _st.wMonth = 7;
+                //if (_st.wMonth == 6)
+                //    _st.wMonth = 7;
+                //else _st.wMonth = 6;
 
-                SetSystemTime(ref _st); // invoke this method.
+                //SetSystemTime(ref _st); // invoke this method.
 
                 if (listBox2.Items.Count > 1000)
                     listBox2.Items.Clear();

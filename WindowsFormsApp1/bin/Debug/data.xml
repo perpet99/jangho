@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <userList>
+    <user>
+      <name>tt</name>
+      <key>ObHo7eFyzsWMugPrEvIAbTs43sqLnLqWN2Yrq0bkP4r</key>
+      <dateList>
+        <string>202006019</string>
+         <string>202006020</string>
+	<string>202006021</string>
+	<string>202006026</string>
+	<string>202006027</string>
+	<string>202006028</string>
+	<string>202007003</string>
+	<string>202007004</string>
+	<string>202007005</string>
+	<string>202007010</string>
+	<string>202007011</string>
+	<string>202007012</string>
+	<string>202007017</string>
+	<string>202007018</string>
+	<string>202007019</string>
+	<string>202007024</string>
+	<string>202007025</string>
+	<string>202007026</string>
+	<string>202007031</string>
+
+      </dateList>
+    </user>
+  </userList>
+</data>
