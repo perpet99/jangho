@@ -39,6 +39,7 @@ namespace WindowsFormsApp1
         {
             public string date;
             public string count;
+            public string room = "";
             public int callTick = 0;
         }
 
@@ -133,31 +134,61 @@ namespace WindowsFormsApp1
                     if (line.Contains("f_SelectDateZone") == false)
                         continue;
 
-                    var objList = line.Split(new string[] { "line = ", "href='javascript:f_SelectDateZone(", "\"", " ", ",", ");'" }, StringSplitOptions.RemoveEmptyEntries);
+                    var objList = line.Split(new string[] { "line = ","zero", "href='javascript:f_SelectDateZone(", "\"", " ", ",", ");'" }, StringSplitOptions.RemoveEmptyEntries);
                     //var objList = ExtractFormatParameters(line2, "f_SelectDateZone( {0}, {1}, {2} , {3} , {4} )");
 
-                    if (objList.Count() == 0)
+                    if (objList.Count() < 10)
                         continue;
-                    if (objList[4] == "0")
+
+                    if (objList[0] != "<LI")
                         continue;
-                    int aa = 0;
-                    if (int.TryParse(objList[0], out aa) == false)
-                        continue;
+
+
                     dateInfo d = new dateInfo();
-                    d.date = objList[0];
-                    d.count = objList[4];
-                    if (_dateList.Keys.Contains(d.date) == false)
+                    d.date = objList[5];
+                    d.room = objList[8];
+                    d.count = objList[9];
+                    
+                    // 모두가능 저장
+                    if (_dateList.Keys.Contains(d.date) == false )
                     {
                         _dateList[d.date] = d;
+                    }
+                    //특정룸 저장
+                    if (_dateList.Keys.Contains(d.date+d.room) == false)
+                    {
+                        _dateList[d.date + d.room] = d;
+                    }
+
+                    if( d.count == "0")
+                    {
+                        continue;
+                    }
+
+                    if (listBox1.Items.Count > 1000)
+                    {
+                        listBox1.Items.Clear();
                     }
 
                     if ((Environment.TickCount - _dateList[d.date].callTick) < 60 * 1000)
                         continue;
 
-                    if (_date2UserList.Keys.Contains(d.date) == false)
+                    string dd = string.Empty;
+
+                    if (_date2UserList.Keys.Contains(d.date) == true)
+                    {
+                        dd = d.date;
+                    }
+
+                    if (_date2UserList.Keys.Contains(d.date + d.room) == true)
+                    {
+                        dd = d.date + d.room;
+                    }
+
+                    if (dd == string.Empty)
                         continue;
 
-                    var du = _date2UserList[d.date];
+                    var du = _date2UserList[dd];
 
                     Process.Start("IExplore.exe", "http://forest.maketicket.co.kr/ticket/GD41");
 
