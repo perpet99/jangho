@@ -204,12 +204,12 @@ namespace WindowsFormsApp1
 
                     string dd = string.Empty;
 
-                    if (_date2UserList.Keys.Equals(d.date) == true)
+                    if (_date2UserList.Keys.Contains(d.date) == true)
                     {
                         dd = d.date;
                     }
 
-                    if (_date2UserList.Keys.Equals(d.date + d.room) == true)
+                    if (_date2UserList.Keys.Contains(d.date + d.room) == true)
                     {
                         dd = d.date + d.room;
                     }
@@ -238,7 +238,6 @@ namespace WindowsFormsApp1
                             });
 
                         var response = await client.PostAsync("https://notify-api.line.me/api/notify", content3);
-
                         var responseString = await response.Content.ReadAsStringAsync();
                     }
 
