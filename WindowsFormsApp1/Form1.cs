@@ -199,7 +199,7 @@ namespace WindowsFormsApp1
                         listBox1.Items.Clear();
                     }
 
-                    if ((Environment.TickCount - _dateList[d.date].callTick) < 60 * 1000)
+                    if ((Environment.TickCount - _dateList[d.date].callTick) < 60 * 1000 * 10)
                         continue;
 
                     string dd = string.Empty;
