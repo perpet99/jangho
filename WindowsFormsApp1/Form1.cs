@@ -270,5 +270,12 @@ namespace WindowsFormsApp1
 
 
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            var n = int.Parse(textBox1.Text);
+            timer1.Interval = n;
+            
+        }
     }
 }
