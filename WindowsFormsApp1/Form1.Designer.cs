@@ -42,7 +42,7 @@
             this.webBrowser1.Location = new System.Drawing.Point(0, 0);
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
-            this.webBrowser1.Size = new System.Drawing.Size(844, 726);
+            this.webBrowser1.Size = new System.Drawing.Size(1209, 786);
             this.webBrowser1.TabIndex = 0;
             // 
             // timer1
@@ -55,7 +55,7 @@
             // 
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(895, 22);
+            this.listBox1.Location = new System.Drawing.Point(1252, 65);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(620, 340);
             this.listBox1.TabIndex = 1;
@@ -64,7 +64,7 @@
             // 
             this.listBox2.FormattingEnabled = true;
             this.listBox2.ItemHeight = 12;
-            this.listBox2.Location = new System.Drawing.Point(918, 432);
+            this.listBox2.Location = new System.Drawing.Point(1252, 578);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(620, 148);
             this.listBox2.TabIndex = 2;
@@ -74,7 +74,7 @@
             this.checkBox1.AutoSize = true;
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(167, 769);
+            this.checkBox1.Location = new System.Drawing.Point(313, 808);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(86, 16);
             this.checkBox1.TabIndex = 3;

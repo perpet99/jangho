@@ -84,6 +84,10 @@ namespace WindowsFormsApp1
 
                 }
             }
+            textBox1_TextChanged(null, null);
+
+
+            timer1_Tick(null, null);
         }
 
         private void WebBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -139,9 +143,10 @@ namespace WindowsFormsApp1
                 switch(state)
                 {
                     case 0:
-                        state = 1;
-                        break;
+                        //state = 0;
+                        //break;
                     case 1:
+                        await Task.Delay(1000);
                         var list = webBrowser1.Document.GetElementsByTagName("a");
                         foreach (var item in list)
                         {
@@ -149,8 +154,10 @@ namespace WindowsFormsApp1
                             if (aa != null && aa.InnerText == "다음달")
                                 aa.InvokeMember("Click");
                         }
-                        state = 2;
-                        return;
+                        await Task.Delay(1000);
+                        //state = 2;
+                        //return;
+                        break;
                     case 2:
                         state = 0;
                         break;
