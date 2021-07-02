@@ -110,7 +110,11 @@ namespace WindowsFormsApp1
             return new object[] { };
         }
         private static readonly HttpClient client = new HttpClient();
-        int state = 0;
+        
+
+
+
+
         private async void timer1_Tick(object sender, EventArgs e)
         {
             //var form = new Form2();
@@ -122,158 +126,166 @@ namespace WindowsFormsApp1
             {
 
 
-            //webBrowser1.Document.InvokeScript("calendar_move('20020706')");
+                //webBrowser1.Document.InvokeScript("calendar_move('20020706')");
                 //webBrowser1.Document.InvokeScript("javascript:calendar_move('20200706')");
-              
-                
+
+
                 //    var r = webBrowser1.Document.GetElementsByTagName("HTML");
 
                 //var a = r[0].OuterHtml;
 
-                
+
 
                 //var sr = new System.IO.StreamReader(webBrowser1.DocumentStream);
 
                 //_dateList.Clear();
-                
+
                 //webBrowser1.Document.InvokeScript("calendar_move(\"20020706\")");
                 //doclist.Add(webBrowser1.DocumentText);
                 //while (sr.EndOfStream)
+                int state = 0;
 
-                switch(state)
-                {
-                    case 0:
-                        //state = 0;
-                        //break;
-                    case 1:
-                        await Task.Delay(1000);
-                        var list = webBrowser1.Document.GetElementsByTagName("a");
-                        foreach (var item in list)
-                        {
-                            var aa = item as HtmlElement;
-                            if (aa != null && aa.InnerText == "다음달")
-                                aa.InvokeMember("Click");
-                        }
-                        await Task.Delay(1000);
-                        //state = 2;
-                        //return;
-                        break;
-                    case 2:
-                        state = 0;
-                        break;
-
-                }
-
-                foreach (var line in webBrowser1.DocumentText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                while (true)
                 {
 
-                    if (line.Contains("f_SelectDateZone") == false)
-                        continue;
-
-                    var objList = line.Split(new string[] { "line = ","zero", "href='javascript:f_SelectDateZone(", "\"", " ", ",", ");'" }, StringSplitOptions.RemoveEmptyEntries);
-                    //var objList = ExtractFormatParameters(line2, "f_SelectDateZone( {0}, {1}, {2} , {3} , {4} )");
-
-                    if (objList.Count() < 10)
-                        continue;
-
-                    if (objList[0] != "<LI")
-                        continue;
-
-
-                    dateInfo d = new dateInfo();
-                    d.date = objList[5];
-                    d.room = objList[8];
-                    d.count = objList[9];
-                    
-                    // 모두가능 저장
-                    if (_dateList.Keys.Contains(d.date) == false )
+                    switch (state)
                     {
-                        _dateList[d.date] = d;
-                    }
-                    //특정룸 저장
-                    if (_dateList.Keys.Contains(d.date+d.room) == false)
-                    {
-                        _dateList[d.date + d.room] = d;
-                    }
+                        case 0:
+                            webBrowser1.Navigate("http://forest.maketicket.co.kr/ticket/GD41");
 
-                    if( d.count == "0")
-                    {
-                        continue;
-                    }
-
-                    if (listBox1.Items.Count > 1000)
-                    {
-                        listBox1.Items.Clear();
-                    }
-
-                    if ((Environment.TickCount - _dateList[d.date].callTick) < 60 * 1000 * 10)
-                        continue;
-
-                    string dd = string.Empty;
-
-                    if (_date2UserList.Keys.Contains(d.date) == true)
-                    {
-                        dd = d.date;
-                    }
-
-                    if (_date2UserList.Keys.Contains(d.date + d.room) == true)
-                    {
-                        dd = d.date + d.room;
-                    }
-
-                    if (dd == string.Empty)
-                        continue;
-
-                    var du = _date2UserList[dd];
-
-                    if( checkBox1.Checked)
-                        Process.Start("IExplore.exe", "http://forest.maketicket.co.kr/ticket/GD41");
-
-                    foreach (var item in du.userList)
-                    {
-
-                        _dateList[d.date].callTick = Environment.TickCount;
-
-
-
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", item);
-
-                        var content3 = new FormUrlEncodedContent(new[]
+                            await Task.Delay(1000);
+                            state = 1;
+                            break;
+                        case 1:
+                            await Task.Delay(1000);
+                            var list = webBrowser1.Document.GetElementsByTagName("a");
+                            foreach (var item in list)
                             {
+                                var aa = item as HtmlElement;
+                                if (aa != null && aa.InnerText == "다음달")
+                                    aa.InvokeMember("Click");
+                            }
+                            await Task.Delay(1000);
+                            state = 2;
+                            //return;
+                            break;
+                        case 2:
+                            return;
+                    }
+
+                    foreach (var line in webBrowser1.DocumentText.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+
+                        if (line.Contains("f_SelectDateZone") == false)
+                            continue;
+
+                        var objList = line.Split(new string[] { "line = ", "zero", "href='javascript:f_SelectDateZone(", "\"", " ", ",", ");'" }, StringSplitOptions.RemoveEmptyEntries);
+                        //var objList = ExtractFormatParameters(line2, "f_SelectDateZone( {0}, {1}, {2} , {3} , {4} )");
+
+                        if (objList.Count() < 10)
+                            continue;
+
+                        if (objList[0] != "<LI")
+                            continue;
+
+
+                        dateInfo d = new dateInfo();
+                        d.date = objList[5];
+                        d.room = objList[8];
+                        d.count = objList[9];
+
+                        // 모두가능 저장
+                        if (_dateList.Keys.Contains(d.date) == false)
+                        {
+                            _dateList[d.date] = d;
+                        }
+                        //특정룸 저장
+                        if (_dateList.Keys.Contains(d.date + d.room) == false)
+                        {
+                            _dateList[d.date + d.room] = d;
+                        }
+
+                        if (d.count == "0")
+                        {
+                            continue;
+                        }
+
+                        if (listBox1.Items.Count > 1000)
+                        {
+                            listBox1.Items.Clear();
+                        }
+
+                        if ((Environment.TickCount - _dateList[d.date].callTick) < 60 * 1000 * 10)
+                            continue;
+
+                        string dd = string.Empty;
+
+                        if (_date2UserList.Keys.Contains(d.date) == true)
+                        {
+                            dd = d.date;
+                        }
+
+                        if (_date2UserList.Keys.Contains(d.date + d.room) == true)
+                        {
+                            dd = d.date + d.room;
+                        }
+
+                        if (dd == string.Empty)
+                            continue;
+
+                        var du = _date2UserList[dd];
+
+                        if (checkBox1.Checked)
+                            Process.Start("IExplore.exe", "http://forest.maketicket.co.kr/ticket/GD41");
+
+                        foreach (var item in du.userList)
+                        {
+
+                            _dateList[d.date].callTick = Environment.TickCount;
+
+
+
+                            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", item);
+
+                            var content3 = new FormUrlEncodedContent(new[]
+                                {
                                 new KeyValuePair<string, string>("message", d.date),
                                 new KeyValuePair<string, string>("message", "http://forest.maketicket.co.kr/ticket/GD41")
                             });
 
-                        var response = await client.PostAsync("https://notify-api.line.me/api/notify", content3);
-                        var responseString = await response.Content.ReadAsStringAsync();
+                            var response = await client.PostAsync("https://notify-api.line.me/api/notify", content3);
+                            var responseString = await response.Content.ReadAsStringAsync();
+                        }
+
+
                     }
 
+                    listBox1.Items.Clear();
+                    foreach (var item in _dateList)
+                    {
+                        listBox1.Items.Add(item);
+                    }
 
+                    //if (_st.wMonth == 6)
+                    //    _st.wMonth = 7;
+                    //else _st.wMonth = 6;
+
+                    //SetSystemTime(ref _st); // invoke this method.
+
+                    if (listBox2.Items.Count > 1000)
+                        listBox2.Items.Clear();
+                    listBox2.Items.Insert(0, Environment.TickCount.ToString());
+
+                 
                 }
-
-                listBox1.Items.Clear();
-                foreach (var item in _dateList)
-                {
-                    listBox1.Items.Add(item);
-                }
-
-                //if (_st.wMonth == 6)
-                //    _st.wMonth = 7;
-                //else _st.wMonth = 6;
-
-                //SetSystemTime(ref _st); // invoke this method.
-
-                if (listBox2.Items.Count > 1000)
-                    listBox2.Items.Clear();
-                listBox2.Items.Insert(0, Environment.TickCount.ToString());
-
-                webBrowser1.Navigate("http://forest.maketicket.co.kr/ticket/GD41");
             }
             catch (Exception ex)
             {
 
-                
+
             }
+        
+               
 
 
         }
